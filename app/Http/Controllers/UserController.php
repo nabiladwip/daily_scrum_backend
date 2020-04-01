@@ -42,7 +42,7 @@ class UserController extends Controller
 		$validator = Validator::make($request->all(), [
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
-			'email' => 'required|string|email|max:255|unique:users',
+			'email' => 'required|string|email|max:255|unique:user',
             'password' => 'required|string|min:6',
             'password_verify' => 'required|string|min:6|',
 		]);
@@ -79,7 +79,7 @@ class UserController extends Controller
         foreach (User::take($limit)->skip($offset)->get() as $p) {
             $item = [
                 "id"          => $p->id,
-                "fisrtname"        => $p->fisrtname,
+                "firstname"        => $p->firstname,
                 "lastname"        => $p->lastname,
                 "email"    	  => $p->email,
                 "password"    => $p->password,
@@ -92,33 +92,9 @@ class UserController extends Controller
         $data["user"] = $user;
         $data["status"] = 1;
         return response($data);
-    }
-
-    // public function find(Request $request, $limit = 10, $offset = 0)
-    // {
-    //     $find = $request->find;
-    //     $user = User::where("id","like","%$find%")
-    //     ->orWhere("fistname","like","%$find%")
-    //     ->orWhere("email","like","%$find%");
-    //     $data["count"] = $user->count();
-    //     $users = array();
-    //     foreach ($user->skip($offset)->take($limit)->get() as $p) {
-    //       $item = [
-    //         "id" => $p->id,
-    //         "fisrtname" => $p->name,
-    //         "email" => $p->username,
-    //         "password" => $p->password,
-    //         "created_at" => $p->created_at,
-    //         "updated_at" => $p->updated_at
-    //       ];
-    //       array_push($users,$item);
-    //     }
-    //     $data["user"] = $users;
-    //     $data["status"] = 1;
-    //     return response($data);
-    // }
-
-    public function delete($id)
+	}
+	
+	public function delete($id)
     {
         try{
 
@@ -134,45 +110,8 @@ class UserController extends Controller
                 "message"   => $e->getMessage()
             ]);
         }
-    }
-
-	
-
-	public function ubah(Request $request)
-	{
-		$validator = Validator::make($request->all(), [
-            'firstname' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
-			'email' => 'required|string|email|max:255',
-            'password' => 'required|string|min:6',
-            'password_verify' => 'required|string|min:6|confirmed',
-		]);
-
-		if($validator->fails()){
-			return response()->json([
-				'status'	=> '0',
-				'message'	=> $validator->errors()
-			]);
-		}
-
-		//proses update data
-		$user = User::where('id', $request->id)->first();
-        $user->firstname 	= $request->fisrtname;
-        $user->lastname 	= $request->lastname;
-		$user->email 	= $request->email;
-        $user->password = Hash::make($request->password);
-        $user->password_verify = Hash::make($request->password_verify);
-		$user->save();
-
-
-		return response()->json([
-			'status'	=> '1',
-			'message'	=> 'User berhasil diubah'
-		], 201);
 	}
-
-
-
+	
 	public function getAuthenticatedUser(){
 		try {
 			if(!$user = JWTAuth::parseToken()->authenticate()){
@@ -203,5 +142,70 @@ class UserController extends Controller
                 "user"    => $user
 		 ], 201);
 	}
+
+    // public function find(Request $request, $limit = 10, $offset = 0)
+    // {
+    //     $find = $request->find;
+    //     $user = User::where("id","like","%$find%")
+    //     ->orWhere("fistname","like","%$find%")
+    //     ->orWhere("email","like","%$find%");
+    //     $data["count"] = $user->count();
+    //     $users = array();
+    //     foreach ($user->skip($offset)->take($limit)->get() as $p) {
+    //       $item = [
+    //         "id" => $p->id,
+    //         "fisrtname" => $p->name,
+    //         "email" => $p->username,
+    //         "password" => $p->password,
+    //         "created_at" => $p->created_at,
+    //         "updated_at" => $p->updated_at
+    //       ];
+    //       array_push($users,$item);
+    //     }
+    //     $data["user"] = $users;
+    //     $data["status"] = 1;
+    //     return response($data);
+    // }
+
+  
+
+	
+
+	// public function ubah(Request $request)
+	// {
+	// 	$validator = Validator::make($request->all(), [
+    //         'firstname' => 'required|string|max:255',
+    //         'lastname' => 'required|string|max:255',
+	// 		'email' => 'required|string|email|max:255',
+    //         'password' => 'required|string|min:6',
+    //         'password_verify' => 'required|string|min:6|confirmed',
+	// 	]);
+
+	// 	if($validator->fails()){
+	// 		return response()->json([
+	// 			'status'	=> '0',
+	// 			'message'	=> $validator->errors()
+	// 		]);
+	// 	}
+
+	// 	//proses update data
+	// 	$user = User::where('id', $request->id)->first();
+    //     $user->firstname 	= $request->fisrtname;
+    //     $user->lastname 	= $request->lastname;
+	// 	$user->email 	= $request->email;
+    //     $user->password = Hash::make($request->password);
+    //     $user->password_verify = Hash::make($request->password_verify);
+	// 	$user->save();
+
+
+	// 	return response()->json([
+	// 		'status'	=> '1',
+	// 		'message'	=> 'User berhasil diubah'
+	// 	], 201);
+	// }
+
+
+
+	
 
 }

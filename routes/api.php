@@ -14,6 +14,11 @@ Route::middleware(['jwt.verify'])->group(function(){
 	Route::post('user/ubah', "UserController@ubah");
 	Route::get('user/data', "UserController@index");
 
+	Route::get('dailyScrum/{id}', "dailyScrumController@index"); //read daily_Scrum
+	Route::post('dailyScrum', 'dailyScrumController@store'); //create daily_Scrum
+	Route::delete('dailyScrum/{id}', "dailyScrumController@delete"); //delete daily_Scrum
+
+
 
     
 
